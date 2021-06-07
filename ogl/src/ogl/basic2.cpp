@@ -621,7 +621,7 @@ void wxPolygonShape::ReadAttributes(wxExpr *clause)
   m_originalPoints = new wxList;
 
   wxExpr *points_list = NULL;
-  clause->AssignAttributeValue(wxT("points"), &points_list);
+  clause->AssignAttributeValue(wxString("points").wchar_str(), &points_list);
 
   // If no points_list, don't crash!! Assume a diamond instead.
   double the_height = 100.0;
@@ -663,7 +663,7 @@ void wxPolygonShape::ReadAttributes(wxExpr *clause)
   }
 
   points_list = NULL;
-  clause->AssignAttributeValue(wxT("m_originalPoints"), &points_list);
+  clause->AssignAttributeValue(wxString("m_originalPoints").wchar_str(), &points_list);
 
   // If no points_list, don't crash!! Assume a diamond instead.
   if (!points_list)
@@ -943,9 +943,9 @@ void wxRectangleShape::WriteAttributes(wxExpr *clause)
 void wxRectangleShape::ReadAttributes(wxExpr *clause)
 {
   wxShape::ReadAttributes(clause);
-  clause->AssignAttributeValue(wxT("width"), &m_width);
-  clause->AssignAttributeValue(wxT("height"), &m_height);
-  clause->AssignAttributeValue(wxT("corner"), &m_cornerRadius);
+  clause->AssignAttributeValue(wxString("width").wchar_str(), &m_width);
+  clause->AssignAttributeValue(wxString("height").wchar_str(), &m_height);
+  clause->AssignAttributeValue(wxString("corner").wchar_str(), &m_cornerRadius);
 
   // In case we're reading an old file, set the region's size
   if (m_regions.GetCount() == 1)
@@ -1081,8 +1081,8 @@ void wxEllipseShape::WriteAttributes(wxExpr *clause)
 void wxEllipseShape::ReadAttributes(wxExpr *clause)
 {
   wxShape::ReadAttributes(clause);
-  clause->AssignAttributeValue(wxT("width"), &m_width);
-  clause->AssignAttributeValue(wxT("height"), &m_height);
+  clause->AssignAttributeValue(wxString("width").wchar_str(), &m_width);
+  clause->AssignAttributeValue(wxString("height").wchar_str(), &m_height);
 
   // In case we're reading an old file, set the region's size
   if (m_regions.GetCount() == 1)
@@ -1294,7 +1294,7 @@ void wxShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), double x
 
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1429,7 +1429,7 @@ void wxShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double y, int 
   pt->sm_controlPointDragStartWidth = bound_x;
   pt->sm_controlPointDragStartHeight = bound_y;
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1629,7 +1629,7 @@ void wxPolygonShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), d
 
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1681,7 +1681,7 @@ void wxPolygonShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double 
 
   if (ppt->m_originalDistance == 0.0) ppt->m_originalDistance = (double) 0.0001;
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1765,7 +1765,7 @@ wxShapeRegion::wxShapeRegion()
   m_regionName = wxEmptyString;
   m_textColour = wxT("BLACK");
   m_penColour = wxT("BLACK");
-  m_penStyle = wxSOLID;
+  m_penStyle = wxPENSTYLE_SOLID;
   m_actualColourObject = wxTheColourDatabase->Find(wxT("BLACK"));
   m_actualPenObject = NULL;
 }

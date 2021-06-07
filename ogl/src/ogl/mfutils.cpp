@@ -232,7 +232,7 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
       {
         wxMetaRecord *rec = new wxMetaRecord(META_SETBKMODE);
         rec->param1 = getshort(handle); // Background mode
-        if (rec->param1 == OPAQUE) rec->param1 = wxSOLID;
+        if (rec->param1 == OPAQUE) rec->param1 = wxPENSTYLE_SOLID;
         else rec->param1 = wxTRANSPARENT;
         metaRecords.Append(rec);
         break;
@@ -525,15 +525,15 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
 
         int style;
         if (msStyle == PS_DOT)
-          style = wxDOT;
+          style = wxPENSTYLE_DOT;
         else if (msStyle == PS_DASH)
           style = wxSHORT_DASH;
         else if (msStyle == PS_NULL)
           style = wxTRANSPARENT;
-        else style = wxSOLID;
+        else style = wxPENSTYLE_SOLID;
 
         wxColour colour(GetRValue(colorref), GetGValue(colorref), GetBValue(colorref));
-        rec->param1 = (long)wxThePenList->FindOrCreatePen(colour, x, style);
+        rec->param1 = (long)wxThePenList->FindOrCreatePen(colour, x, static_cast<wxPenStyle>(style));
         metaRecords.Append(rec);
         gdiObjects.Append(rec);
 
@@ -570,34 +570,32 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
         // header)
         fread((void *)lfFacename, sizeof(char), (int)((2*rdSize) - 18 - 6), handle);
 
-        int family;
+        wxFontFamily family;
         if (lfPitchAndFamily & FF_MODERN)
-          family = wxMODERN;
-        else if (lfPitchAndFamily & FF_MODERN)
-          family = wxMODERN;
+          family = wxFONTFAMILY_MODERN;
         else if (lfPitchAndFamily & FF_ROMAN)
-          family = wxROMAN;
+          family = wxFONTFAMILY_ROMAN;
         else if (lfPitchAndFamily & FF_SWISS)
-          family = wxSWISS;
+          family = wxFONTFAMILY_SWISS;
         else if (lfPitchAndFamily & FF_DECORATIVE)
-          family = wxDECORATIVE;
+          family = wxFONTFAMILY_DECORATIVE;
         else
-          family = wxDEFAULT;
+          family = wxFONTFAMILY_DEFAULT;
 
-        int weight;
+        wxFontWeight weight;
         if (lfWeight == 300)
-          weight = wxLIGHT;
+          weight = wxFONTWEIGHT_LIGHT;
         else if (lfWeight == 400)
-          weight = wxNORMAL;
+          weight = wxFONTWEIGHT_NORMAL;
         else if (lfWeight == 900)
-          weight = wxBOLD;
-        else weight = wxNORMAL;
+          weight = wxFONTWEIGHT_BOLD;
+        else weight = wxFONTWEIGHT_NORMAL;
 
-        int style;
+        wxFontStyle style;
         if (lfItalic != 0)
-          style = wxITALIC;
+          style = wxFONTSTYLE_ITALIC;
         else
-          style = wxNORMAL;
+          style = wxFONTSTYLE_NORMAL;
 
         // About how many pixels per inch???
         int logPixelsY = 100;
@@ -620,7 +618,7 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
         long colorref = getint(handle);   // COLORREF: 4 bytes
         int hatchStyle = getshort(handle); // Hatch style 2 bytes
 
-        int style;
+        wxBrushStyle style;
         switch (msStyle)
         {
           case BS_HATCHED:
@@ -628,23 +626,23 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
             switch (hatchStyle)
             {
               case HS_BDIAGONAL:
-                style = wxBDIAGONAL_HATCH;
+                style = wxBRUSHSTYLE_BDIAGONAL_HATCH;
                 break;
               case HS_DIAGCROSS:
-                style = wxCROSSDIAG_HATCH;
+                style = wxBRUSHSTYLE_CROSSDIAG_HATCH;
                 break;
               case HS_FDIAGONAL:
-                style = wxFDIAGONAL_HATCH;
+                style = wxBRUSHSTYLE_FDIAGONAL_HATCH;
                 break;
               case HS_HORIZONTAL:
-                style = wxHORIZONTAL_HATCH;
+                style = wxBRUSHSTYLE_HORIZONTAL_HATCH;
                 break;
               case HS_VERTICAL:
-                style = wxVERTICAL_HATCH;
+                style = wxBRUSHSTYLE_VERTICAL_HATCH;
                 break;
               default:
               case HS_CROSS:
-                style = wxCROSS_HATCH;
+                style = wxBRUSHSTYLE_CROSS_HATCH;
                 break;
             }
             break;
@@ -655,18 +653,18 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
           /* in fact I'm not sure  why pen related PS_XXX and */
           /* BS_XXX constants are all mixed into single style */
           case PS_DOT:
-            style = wxDOT;
+            style = wxPENSTYLE_DOT;
             break;
 #endif
           case PS_DASH:
-            style = wxSHORT_DASH;
+            style = wxBRUSHSTYLE_HORIZONTAL_HATCH;
             break;
           case PS_NULL:
-            style = wxTRANSPARENT;
+            style = wxBRUSHSTYLE_TRANSPARENT;
             break;
           case BS_SOLID:
           default:
-            style = wxSOLID;
+            style = wxBRUSHSTYLE_SOLID;
             break;
         }
 
@@ -957,12 +955,12 @@ bool wxXMetaFile::Play(wxDC *dc)
 
         int style;
         if (msStyle == PS_DOT)
-          style = wxDOT;
+          style = wxPENSTYLE_DOT;
         else if (msStyle == PS_DASH)
           style = wxSHORT_DASH;
         else if (msStyle == PS_NULL)
           style = wxTRANSPARENT;
-        else style = wxSOLID;
+        else style = wxPENSTYLE_SOLID;
 
         wxColour colour(GetRValue(colorref), GetGValue(colorref), GetBValue(colorref));
         rec->param1 = (long)wxThePenList->FindOrCreatePen(&colour, x, style);
@@ -1006,16 +1004,16 @@ bool wxXMetaFile::Play(wxDC *dc)
         if (lfWeight == 300)
           weight = wxLIGHT;
         else if (lfWeight == 400)
-          weight = wxNORMAL;
+          weight = wxFONTWEIGHT_NORMAL;
         else if (lfWeight == 900)
           weight = wxBOLD;
-        else weight = wxNORMAL;
+        else weight = wxFONTWEIGHT_NORMAL;
 
         int style;
         if ((bool)lfItalic)
-          style = wxITALIC;
+          style = wxFONTSTYLE_ITALIC;
         else
-          style = wxNORMAL;
+          style = wxFONTSTYLE_NORMAL;
 
         // About how many pixels per inch???
         int logPixelsY = 100;
@@ -1037,15 +1035,15 @@ bool wxXMetaFile::Play(wxDC *dc)
 
         int style;
         if (msStyle == PS_DOT)
-          style = wxDOT;
+          style = wxPENSTYLE_DOT;
         else if (msStyle == PS_DASH)
           style = wxSHORT_DASH;
         else if (msStyle == PS_NULL)
           style = wxTRANSPARENT;
-        else style = wxSOLID;
+        else style = wxPENSTYLE_SOLID;
 
         wxColour colour(GetRValue(colorref), GetGValue(colorref), GetBValue(colorref));
-        rec->param1 = (long)wxTheBrushList->FindOrCreateBrush(&colour, wxSOLID);
+        rec->param1 = (long)wxTheBrushList->FindOrCreateBrush(&colour, wxBRUSHSTYLE_SOLID);
 */
         break;
       }

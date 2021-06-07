@@ -444,7 +444,7 @@ void wxOpSetGDI::Do(wxDC& dc, double WXUNUSED(xoffset), double WXUNUSED(yoffset)
         // Need to construct a brush to match the outline pen's colour
         if (m_image->m_outlinePen)
         {
-          wxBrush *br = wxTheBrushList->FindOrCreateBrush(m_image->m_outlinePen->GetColour(), wxSOLID);
+          wxBrush *br = wxTheBrushList->FindOrCreateBrush(m_image->m_outlinePen->GetColour(), wxBRUSHSTYLE_SOLID);
           if (br)
             dc.SetBrush(* br);
         }
@@ -1612,36 +1612,36 @@ void wxPseudoMetaFile::ReadAttributes(wxExpr *clause, int whichAngle)
         case gyTYPE_PEN:
         {
           int penWidth = (int)expr->Nth(1)->IntegerValue();
-          int penStyle = (int)expr->Nth(2)->IntegerValue();
+          wxPenStyle penStyle = static_cast<wxPenStyle>(expr->Nth(2)->IntegerValue());
           unsigned char penRed = (unsigned char)expr->Nth(3)->IntegerValue();
           unsigned char penGreen = (unsigned char)expr->Nth(4)->IntegerValue();
           unsigned char penBlue = (unsigned char)expr->Nth(5)->IntegerValue();
           wxColour col(penRed, penGreen, penBlue);
           wxPen *p = wxThePenList->FindOrCreatePen(col, penWidth, penStyle);
           if (!p)
-            p = wxBLACK_PEN;
+            p = new wxPen(*wxBLACK_PEN);
           m_gdiObjects.Append(p);
           break;
         }
         case gyTYPE_BRUSH:
         {
-          int brushStyle = (int)expr->Nth(1)->IntegerValue();
+          wxBrushStyle brushStyle = static_cast<wxBrushStyle>(expr->Nth(1)->IntegerValue());
           unsigned char brushRed = (unsigned char)expr->Nth(2)->IntegerValue();
           unsigned char brushGreen = (unsigned char)expr->Nth(3)->IntegerValue();
           unsigned char brushBlue = (unsigned char)expr->Nth(4)->IntegerValue();
           wxColour col(brushRed, brushGreen, brushBlue);
           wxBrush *b = wxTheBrushList->FindOrCreateBrush(col, brushStyle);
           if (!b)
-            b = wxWHITE_BRUSH;
+            b = new wxBrush(*wxWHITE_BRUSH);
           m_gdiObjects.Append(b);
           break;
         }
         case gyTYPE_FONT:
         {
           int fontPointSize = (int)expr->Nth(1)->IntegerValue();
-          int fontFamily = (int)expr->Nth(2)->IntegerValue();
-          int fontStyle = (int)expr->Nth(3)->IntegerValue();
-          int fontWeight = (int)expr->Nth(4)->IntegerValue();
+          wxFontFamily fontFamily = static_cast<wxFontFamily>(expr->Nth(2)->IntegerValue());
+          wxFontStyle fontStyle = static_cast<wxFontStyle>(expr->Nth(3)->IntegerValue());
+          wxFontWeight fontWeight = static_cast<wxFontWeight>(expr->Nth(4)->IntegerValue());
           int fontUnderlined = (int)expr->Nth(5)->IntegerValue();
           m_gdiObjects.Append(wxTheFontList->FindOrCreateFont(fontPointSize,
                            fontFamily, fontStyle, fontWeight, (fontUnderlined != 0)));

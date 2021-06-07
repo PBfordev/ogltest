@@ -55,14 +55,14 @@ void wxOGLInitialize()
 {
   g_oglBullseyeCursor = new wxCursor(wxCURSOR_BULLSEYE);
 
-  g_oglNormalFont = new wxFont(10, wxSWISS, wxNORMAL, wxNORMAL);
+  g_oglNormalFont = new wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-  g_oglBlackPen = new wxPen(wxT("BLACK"), 1, wxSOLID);
+  g_oglBlackPen = new wxPen(wxT("BLACK"), 1, wxPENSTYLE_SOLID);
 
-  g_oglWhiteBackgroundPen = new wxPen(wxT("WHITE"), 1, wxSOLID);
-  g_oglTransparentPen = new wxPen(wxT("WHITE"), 1, wxTRANSPARENT);
-  g_oglWhiteBackgroundBrush = new wxBrush(wxT("WHITE"), wxSOLID);
-  g_oglBlackForegroundPen = new wxPen(wxT("BLACK"), 1, wxSOLID);
+  g_oglWhiteBackgroundPen = new wxPen(wxT("WHITE"), 1, wxPENSTYLE_SOLID);
+  g_oglTransparentPen = new wxPen(wxT("WHITE"), 1, wxPENSTYLE_TRANSPARENT);
+  g_oglWhiteBackgroundBrush = new wxBrush(wxT("WHITE"), wxBRUSHSTYLE_SOLID);
+  g_oglBlackForegroundPen = new wxPen(wxT("BLACK"), 1, wxPENSTYLE_SOLID);
 
   OGLInitializeConstraintTypes();
 
@@ -122,7 +122,7 @@ void wxOGLCleanUp()
 
 wxFont *oglMatchFont(int point_size)
 {
-  wxFont *font = wxTheFontList->FindOrCreateFont(point_size, wxSWISS, wxNORMAL, wxNORMAL);
+  wxFont *font = wxTheFontList->FindOrCreateFont(point_size, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 #if 0
   switch (point_size)
   {
@@ -209,9 +209,9 @@ void oglCentreText(wxDC& dc, wxList *text_list,
 
   // First, get maximum dimensions of box enclosing text
 
-  long char_height = 0;
-  long max_width = 0;
-  long current_width = 0;
+  wxCoord char_height = 0;
+  wxCoord max_width = 0;
+  wxCoord current_width = 0;
 
   // Store text extents for speed
   double *widths = new double[n];
@@ -292,9 +292,9 @@ void oglCentreTextNoClipping(wxDC& dc, wxList *text_list,
 
   // First, get maximum dimensions of box enclosing text
 
-  long char_height = 0;
-  long max_width = 0;
-  long current_width = 0;
+  wxCoord char_height = 0;
+  wxCoord max_width = 0;
+  wxCoord current_width = 0;
 
   // Store text extents for speed
   double *widths = new double[n];
@@ -351,9 +351,9 @@ void oglGetCentredTextExtent(wxDC& dc, wxList *text_list,
 
   // First, get maximum dimensions of box enclosing text
 
-  long char_height = 0;
-  long max_width = 0;
-  long current_width = 0;
+  wxCoord char_height = 0;
+  wxCoord max_width = 0;
+  wxCoord current_width = 0;
 
   wxObjectList::compatibility_iterator current = text_list->GetFirst();
   while (current)
@@ -383,7 +383,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
   bool end_word = false; bool new_line = false;
   while (i < len)
   {
-    switch (text[i])
+    switch (text[i].GetValue())
     {
       case wxT('%'):
       {
@@ -441,7 +441,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
 
   wxString buffer;
   wxStringList::compatibility_iterator node = word_list.GetFirst();
-  long x, y;
+  wxCoord x, y;
 
   while (node)
   {

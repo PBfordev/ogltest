@@ -14,8 +14,8 @@
 
 #include "wx/wx.h"
 #include "wx/string.h"
-#include "wx/deprecated/setup.h"
-#include "wx/deprecated/tbarsmpl.h"
+//#include "wx/deprecated/setup.h"
+//#include "wx/deprecated/tbarsmpl.h"
 
 /*
  * Object editor tool palette

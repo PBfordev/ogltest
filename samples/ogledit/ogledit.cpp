@@ -175,11 +175,17 @@ void MyFrame::OnSize(wxSizeEvent& event)
 
 void MyFrame::OnCloseWindow(wxCloseEvent& event)
 {
-  wxDocParentFrame::OnCloseWindow(event);
-  if (!event.GetVeto())
-  {
-    wxOGLCleanUp();
-  }
+   wxDocManager* docManager = GetDocumentManager();
+
+   if ( docManager && !docManager->Clear(!event.CanVeto()) )
+   {
+       event.Veto();
+   }
+   else
+   {
+       event.Skip();
+       wxOGLCleanUp();
+   }
 }
 
 // Intercept menu commands

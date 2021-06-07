@@ -89,11 +89,11 @@ EditorToolPalette *MyApp::CreatePalette(wxFrame *parent)
   palette->SetMargins(2, 2);
   palette->SetToolBitmapSize(wxSize(22, 22));
 
-  palette->AddTool(PALETTE_ARROW, PaletteArrow, wxNullBitmap, true, 0, wxDefaultCoord, NULL, _T("Pointer"));
-  palette->AddTool(PALETTE_TOOL1, PaletteTool1, wxNullBitmap, true, 0, wxDefaultCoord, NULL, _T("Tool 1"));
-  palette->AddTool(PALETTE_TOOL2, PaletteTool2, wxNullBitmap, true, 0, wxDefaultCoord, NULL, _T("Tool 2"));
-  palette->AddTool(PALETTE_TOOL3, PaletteTool3, wxNullBitmap, true, 0, wxDefaultCoord, NULL, _T("Tool 3"));
-  palette->AddTool(PALETTE_TOOL4, PaletteTool4, wxNullBitmap, true, 0, wxDefaultCoord, NULL, _T("Tool 4"));
+  palette->AddRadioTool(PALETTE_ARROW, "Pointer", PaletteArrow);
+  palette->AddRadioTool(PALETTE_TOOL1, "Tool 1", PaletteTool1);
+  palette->AddRadioTool(PALETTE_TOOL2, "Tool 2", PaletteTool2);
+  palette->AddRadioTool(PALETTE_TOOL3, "Tool 3", PaletteTool3);
+  palette->AddRadioTool(PALETTE_TOOL4, "Tool 4", PaletteTool4);
 
   palette->Realize();
 

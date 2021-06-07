@@ -20,6 +20,8 @@
 #include "wx/wx.h"
 #endif
 
+#include "wx/filename.h"
+
 #if wxUSE_PROLOGIO
 #include "wx/deprecated/wxexpr.h"
 #endif
@@ -105,7 +107,7 @@ void wxDiagram::AddShape(wxShape *object, wxShape *addAfter)
 {
   wxNode *nodeAfter = NULL;
   if (addAfter)
-    nodeAfter = m_shapeList->Member(addAfter);
+    nodeAfter = m_shapeList->Find(addAfter);
 
   if (!m_shapeList->Member(object))
   {
@@ -171,7 +173,7 @@ void wxDiagram::ShowAll(bool show)
 
 void wxDiagram::DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2)
 {
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -239,8 +241,7 @@ bool wxDiagram::SaveFile(const wxString& filename)
   }
   OnDatabaseSave(*database);
 
-  wxString tempFile;
-  wxGetTempFileName(wxT("diag"), tempFile);
+  wxString tempFile = wxFileName::CreateTempFileName("diag");  
   FILE* file = fopen(tempFile.mb_str(wxConvFile), "w");
   if (! file)
   {
@@ -335,8 +336,8 @@ void wxDiagram::ReadNodes(wxExprDatabase& database)
     wxChar *type = NULL;
     long parentId = -1;
 
-    clause->AssignAttributeValue(wxT("type"), &type);
-    clause->AssignAttributeValue(wxT("parent"), &parentId);
+    clause->AssignAttributeValue(wxString("type").wchar_str(), &type);
+    clause->AssignAttributeValue(wxString("parent").wchar_str(), &parentId);
     wxClassInfo *classInfo = wxClassInfo::FindClass(type);
     if (classInfo)
     {

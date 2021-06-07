@@ -12,6 +12,13 @@
 #ifndef _OGL_OGL_H_
 #define _OGL_OGL_H_
 
+
+#define WXDLLIMPEXP_OGL
+
+/*
+PB: comment this out in order to be able to build it
+    as a part of a project, not a library
+
 #ifdef WXMAKINGDLL_OGL
     #define WXDLLIMPEXP_OGL WXEXPORT
 #elif defined(WXUSINGDLL)
@@ -19,7 +26,7 @@
 #else // not making nor using DLL
     #define WXDLLIMPEXP_OGL
 #endif
-
+*/
 
 #include "wx/ogl/basic.h"      // Basic shapes
 #include "wx/ogl/basicp.h"

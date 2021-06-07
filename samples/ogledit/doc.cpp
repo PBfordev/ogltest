@@ -20,6 +20,7 @@
 #include "wx/wx.h"
 #endif
 
+#include "wx/filename.h"
 #include "wx/ioswrap.h"
 
 #if !wxUSE_DOC_VIEW_ARCHITECTURE
@@ -53,13 +54,11 @@ wxSTD ostream& DiagramDocument::SaveObject(wxSTD ostream& stream)
 
     wxDocument::SaveObject(stream);
 
-    char buf[400];
-    (void) wxGetTempFileName("diag", buf);
+    wxString fileName = wxFileName::CreateTempFileName("diag");
+    diagram.SaveFile(fileName);
+    wxTransferFileToStream(fileName, stream);
 
-    diagram.SaveFile(buf);
-    wxTransferFileToStream(buf, stream);
-
-    wxRemoveFile(buf);
+    wxRemoveFile(fileName);
 
 #endif
 
@@ -72,14 +71,13 @@ wxSTD istream& DiagramDocument::LoadObject(wxSTD istream& stream)
 
     wxDocument::LoadObject(stream);
 
-    char buf[400];
-    (void) wxGetTempFileName("diag", buf);
+    wxString fileName = wxFileName::CreateTempFileName("diag");
 
-    wxTransferStreamToFile(stream, buf);
+    wxTransferStreamToFile(stream, fileName);
 
     diagram.DeleteAllShapes();
-    diagram.LoadFile(buf);
-    wxRemoveFile(buf);
+    diagram.LoadFile(fileName);
+    wxRemoveFile(fileName);
 
 #endif
 
@@ -501,7 +499,7 @@ void MyEvtHandler::OnBeginDragRight(double x, double y, int WXUNUSED(keys), int 
   wxClientDC dc(GetShape()->GetCanvas());
   GetShape()->GetCanvas()->PrepareDC(dc);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetLogicalFunction(OGLRBLF);
   dc.SetPen(dottedPen);
   double xp, yp;
@@ -518,7 +516,7 @@ void MyEvtHandler::OnDragRight(bool WXUNUSED(draw), double x, double y, int WXUN
   wxClientDC dc(GetShape()->GetCanvas());
   GetShape()->GetCanvas()->PrepareDC(dc);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetLogicalFunction(OGLRBLF);
   dc.SetPen(dottedPen);
   double xp, yp;
@@ -569,7 +567,7 @@ bool MyDiagram::OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeLoad(db, shape, expr);
   wxChar *label = NULL;
-  expr.AssignAttributeValue(_T("label"), &label);
+  expr.AssignAttributeValue(wxString("label").wchar_str(), &label);
   MyEvtHandler *handler = new MyEvtHandler(&shape, &shape, wxString(label));
   shape.SetEventHandler(handler);
 
